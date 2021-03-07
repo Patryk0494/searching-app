@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { setId, setQuery } from '../../actions'
@@ -21,16 +21,7 @@ export default function Search({inputClass}) {
     
     useEffect(()=> { 
         fetchSearchPictures();
-    }, [query])
-
-    const fetchAutocompleteData = async () => {
-        const sugestionArray = await fetch(`https://https://unsplash.com/nautocomplete${query}`)
-        .then(resp => resp.json())
-        .catch(err => console.log(err))
-
-    }
-
-    console.log(fetchSearchPictures)
+    }, [query, fetchSearchPictures])
 
     const handleEnterPressed = (e) => {
         if (e.key === 'Enter') {
@@ -40,8 +31,6 @@ export default function Search({inputClass}) {
             }
         }
     
-    
-
     return (
         <div className= 'search-component'>
             <input className={inputClass} type='text' placeholder='Search free high-resolution photos' onKeyDown={handleEnterPressed}></input>
