@@ -1,27 +1,22 @@
-.container {
-  width: 85%;
-  margin: 0 auto;
-}
-
-.grid {
+.searching-content__grid {
   -webkit-column-count: 1;
           column-count: 1;
 }
 
-.grid img {
+.searching-content__grid img {
   width: 100%;
   margin: 10px 0;
 }
 
 @media (min-width: 768px) {
-  .grid {
+  .searching-content__grid {
     -webkit-column-count: 2;
             column-count: 2;
   }
 }
 
 @media (min-width: 768px) {
-  .grid {
+  .searching-content__grid {
     -webkit-column-count: 3;
             column-count: 3;
   }
