@@ -3,6 +3,7 @@ import './Modal.css'
 
 export default function Modal({displayedPhotoId, classOpen, isModalOpen}) {
     const[photoData, setPhotoData] = useState({});
+    const[loaded, setLoaded] = useState(false);
 
     const fetchPhoto = async () => {
             const fetchData  = await fetch(`https://api.unsplash.com/photos/${displayedPhotoId}?client_id=HZ9Xdpuzh8h0qelvvCRboYwsaVJ27cJYaLYvGtgyDBw`)
@@ -39,28 +40,25 @@ export default function Modal({displayedPhotoId, classOpen, isModalOpen}) {
         'January', 'February', 'March', 'April', 'May', 'June', 
         'July', 'August', 'September', 'October', 'November', 'December'
     ]
-    let monthString;
 
     const getDateString = () => {
-        monthString = months[month];
+        const monthString = months[month];
         const dateString = `${monthString}, ${year}`;
         return dateString;
     }
             
     return (
-        <div className={`modal-container${classOpen ? '' : ' modal-container--hide'}`}>
-            {photoData ? 
-                (<div className={`modal${classOpen ? '' : ' modal-container--hide'}`}>
+        <div className={`modal-container${classOpen ? '' : ' modal-container--hide'}`}> 
+                <div className={`modal${classOpen ? '' : ' modal-container--hide'}`}>
                     <div className="modal__heading">
                         <span className='modal__photo-author'>{author}</span>
                         <span className='modal__photo-date'>{getDateString()}</span>
                     </div>
-                    <img className='modal__photo' src={url} alt={description}/>
+                    <img className='modal__photo' src={url} alt={description} onLoad={() => setLoaded(true)} style={loaded ? {} : {display: 'none'}}/>  
+                    <div style={!loaded ? {width: '100%'} : {display: 'none'}}>Loading</div> 
                     <span className='modal__photo-location'>{location}</span>
                     <div className='modal__exit' onClick={isModalOpen}></div>
-                </div>) :
-                <div>Loading</div>
-            }
+                </div>
         </div>
     )
 }
