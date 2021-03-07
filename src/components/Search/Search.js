@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { setId, setQuery } from '../../actions'
 import './Search.css'
+import { AutoCompleteComponent } from '@syncfusion/ej2-react-dropdowns';
 
 
 export default function Search({inputClass}) {
@@ -14,7 +15,8 @@ export default function Search({inputClass}) {
 
     const fetchSearchPictures = async () => {
             const searchingData = await fetch(url)
-            .then(resp => resp.json());
+            .then(resp => resp.json())
+            .catch(err => console.log(err));
             const {results} = searchingData;
             dispatch(setId(results))
             }
@@ -36,6 +38,7 @@ export default function Search({inputClass}) {
     return (
         <div>
             <input className={inputClass} type='text' placeholder='Search free high-resolution photos' onKeyDown={handleEnterPressed}></input>
+            {/* <AutoCompleteComponent id='atcelement'></AutoCompleteComponent> */}
         </div>
     )
 }
