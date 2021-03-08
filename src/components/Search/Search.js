@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { setId, setQuery } from '../../actions'
-import './Search.css'
+import { setId, setQuery } from '../../actions';
+import './Search.css';
 import {TextField} from '@material-ui/core/';
 import {Autocomplete} from '@material-ui/lab';
 import {CircularProgress} from '@material-ui/core/';
@@ -23,24 +23,27 @@ export default function Search({inputClass}) {
     useEffect(() => {
         let active = true;
     
-        if (!loading) {
-            return undefined;
-        }
-    
+        // if (!loading) {
+        //     return undefined;
+        // }
+        
         (async () => {
-            const response = await fetch(`https://https://unsplash.com/nautocomplete${query}`);
-            const tags = await response.json();
-    
+            const response = await fetch(`https://unsplash.com/nautocomplete/${query}`)
+            const arr = await response.json();
+            const tags = arr
             if (active) {
-                setAutocompleteData((tags).map((key) => tags[key].item[0]));
+                setAutocompleteData(tags.autocomplete.map((elem) => elem.query));
             }
+            console.log(arr)
         })();
-    
+        
         return () => {
             active = false;
         };
-        }, [loading]);
-
+    }, [loading, query]);
+    
+    console.log(autocompleteData)
+        
         useEffect(() => {
             if (!open) {
                 setAutocompleteData([]);
@@ -48,32 +51,30 @@ export default function Search({inputClass}) {
             }, [open]);
 
 
-
-
-
-
-
-
     const fetchSearchPictures = async () => {
-            const searchingData = await fetch(url)
-            .then(resp => resp.json())
-            .catch(err => console.log(err));
-            const {results} = searchingData;
-            dispatch(setId(results))
-            }
-    
-    useEffect(()=> { 
-        fetchSearchPictures();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [query])
+        const searchingData = await fetch(url)
+        .then(resp => resp.json())
+        .catch(err => console.log(err));
+        const {results} = searchingData;
+        dispatch(setId(results))
+        }
 
-    // const handleEnterPressed = (e) => {
-    //     // if (e.key === 'Enter') {
-    //         dispatch(setQuery(e.target.value));
-    //         history.push('/result')
-    //         return fetchSearchPictures();
-    //         }
-    //     // }
+    const handleOnChange = (e) => {
+        dispatch(setQuery(e.target.value))
+    }
+
+    const handleEnterPressed = (e) => {
+        if (e.key === 'Enter') {
+            dispatch(setQuery(e.target.value));
+            history.push('/result')
+            return fetchSearchPictures();
+            }
+        }
+
+        useEffect(()=> { 
+        fetchSearchPictures();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        },[handleEnterPressed])
     
     return (
         <div className= 'search-component'>
@@ -88,26 +89,25 @@ export default function Search({inputClass}) {
                 onClose={() => {
                     setOpen(false);
                 }}
-                getOptionSelected={(autocompleteData, value) => autocompleteData.name === value.name}
-                getOptionLabel={(autocompleteData) => autocompleteData.name}
+                getOptionSelected={(autocompleteData, value) => autocompleteData === value.name}
+                getOptionLabel={(autocompleteData) => autocompleteData}
                 options={autocompleteData}
                 loading={loading}
                 includeInputInList = {true}
                 noOptionsText = 'No options'
-                onInputChange={handleEnterPressed}
-                onHighlightChange = {handleEnterPressed}
                 renderInput={(params) => (
                     <TextField
                     {...params}
                     label="search"
                     variant="outlined"
-                    classes={inputClass}
                     InputProps={{
                         ...params.InputProps,
+                        onKeyDown : handleEnterPressed,
+                        onChange: handleOnChange,
+                        value: {query},
                         endAdornment: (
                         <React.Fragment>
                             {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                            {params.InputProps.endAdornment}
                         </React.Fragment>
                         ),
                     }}
