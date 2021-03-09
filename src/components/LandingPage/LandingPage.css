@@ -38,18 +38,18 @@
 }
 
 .landing-page__headline {
-  font-size: 3rem;
+  font-size: 3em;
   font-weight: 700;
 }
 
 .landing-page__paragraph span {
-  margin-top: .5rem;
+  margin-top: .5em;
   display: block;
 }
 
-.landing-page__search-input {
+.landing-page input {
   width: 100%;
-  padding: .5rem;
+  padding: .5em;
   line-height: 180%;
   border: none;
   border-radius: 5px;

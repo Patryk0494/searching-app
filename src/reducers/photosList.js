@@ -1,6 +1,6 @@
 const photosList = ( state = [], action) => {
     switch(action.type) {
-        case 'setId':
+        case 'setPhotoList':
             return action.payload.map((element) =>  
                 ({id: element.id, url: element.urls.small, alt: element.alt_description})
         );

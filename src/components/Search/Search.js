@@ -1,50 +1,48 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { setId, setQuery } from '../../actions';
+import { setPhotoList, setQuery } from '../../actions';
 import './Search.css';
 import {TextField} from '@material-ui/core/';
 import {Autocomplete} from '@material-ui/lab';
-import {CircularProgress} from '@material-ui/core/';
-
 
 export default function Search({inputClass}) {
     const [open, setOpen] = useState(false);
     const [autocompleteData, setAutocompleteData] = useState([]);
-    const [autocompleteQuery, setAutocompleteQuery] = useState('')
+    const [autocompleteQuery, setAutocompleteQuery] = useState('');
+    const [ifNoOptions, setIfNoOptions] = useState('');
     const loading = open && autocompleteData.length === 0;
     
     let history = useHistory();
     const dispatch = useDispatch();
     
-    const accessKey = 'HZ9Xdpuzh8h0qelvvCRboYwsaVJ27cJYaLYvGtgyDBw'
-    const query = useSelector(state=> state.query)
-    const url = `https://api.unsplash.com/search/photos/?client_id=${accessKey}&query=${query}`
+    const accessKey = 'HZ9Xdpuzh8h0qelvvCRboYwsaVJ27cJYaLYvGtgyDBw';
+    const query = useSelector(state=> state.query);
+    const url = `https://api.unsplash.com/search/photos/?client_id=${accessKey}&query=${query}`;
 
     useEffect(() => {
         let active = true;
         
         (async () => {
-            if (autocompleteQuery.length>2) {
+            if (autocompleteQuery?.length>2) {
                 const response = await fetch(`https://unsplash.com/nautocomplete/${autocompleteQuery}`)
                 const arr = await response.json();
                 const tags = arr
                 if (active) {
                     setAutocompleteData(tags.autocomplete.map((elem) => elem.query));
                 }
-                console.log(arr)
             } else {
                 setOpen(false);
             }
         })();
-        
+        if (autocompleteQuery?.length>2 && autocompleteData.length === 0) {
+            setIfNoOptions('No options')
+        }
         return () => {
             active = false;
         };
     }, [loading, autocompleteQuery]);
-    
-    console.log(autocompleteData)
-        
+            
     useEffect(() => {
         if (!open) {
             setAutocompleteData([]);
@@ -54,10 +52,17 @@ export default function Search({inputClass}) {
     const handleEnterPressed = (e) => {
         if (e.key === 'Enter') {
             dispatch(setQuery(e.target.value));
-            history.push('/result')
+            history.push('/result');
             setOpen(false);
             return fetchSearchPictures();
             }
+    }
+
+    const handleMouseSelect = (newValue) => {
+        dispatch(setQuery(newValue));
+        history.push('/result');
+        setOpen(false);
+        return fetchSearchPictures();
     }
 
     const fetchSearchPictures = useCallback(
@@ -66,22 +71,20 @@ export default function Search({inputClass}) {
             .then(resp => resp.json())
             .catch(err => console.log(err));
             const {results} = searchingData;
-            dispatch(setId(results))
-        },
-        [ url, dispatch ]
+            dispatch(setPhotoList(results))
+        }, 
+        [ url, dispatch]
     );
-
+    
     useEffect(()=> { 
         fetchSearchPictures();
-        })
+        },[fetchSearchPictures])
     
     return (
         <div className= 'search-component'>
-            {/* <input className={inputClass} type='text' placeholder='Search free high-resolution photos' onKeyDown={handleEnterPressed}></input> */}
             <Autocomplete
                 id="asynchronous"
                 style={{ width: 300 }}
-                open={open}
                 onOpen={() => {
                     setOpen(true);
                 }}
@@ -89,7 +92,11 @@ export default function Search({inputClass}) {
                     setOpen(false);
                 }}
                 onChange={(event, newValue) => {
-                    setAutocompleteQuery(newValue);
+                    if(newValue!==null){
+                        setAutocompleteQuery(newValue);
+                        setQuery(newValue);
+                        handleMouseSelect(newValue);
+                        }
                     }}
                 onInputChange={(event, newInputValue) => {
                     setAutocompleteQuery(newInputValue);
@@ -99,21 +106,17 @@ export default function Search({inputClass}) {
                 options={autocompleteData}
                 loading={loading}
                 includeInputInList = {true}
-                noOptionsText = 'No options'
+                noOptionsText = {ifNoOptions}
                 renderInput={(params) => (
                     <TextField
                     {...params}
                     label="Search"
+                    margin="normal"
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,
                         onKeyDown : handleEnterPressed,
                         value: {query},
-                        endAdornment: (
-                        <React.Fragment>
-                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                        </React.Fragment>
-                        ),
                     }}
                     />
                 )}

@@ -11,12 +11,9 @@
     justify-content: center
     visibility: visible
     opacity: 1
-    transform: scale(1)
-    transition: 2s
     &--hide
         visibility: hidden
         opacity: 0
-        transform: scale(.5)
 .modal
     width: 95%
     max-height: 90Vh
@@ -28,6 +25,9 @@
     &__heading
         display: flex
         justify-content: space-between
+    &__loader
+        align-self: center
+        justify-self: center
     &__photo
         max-width: 80%
         max-height: 70vh

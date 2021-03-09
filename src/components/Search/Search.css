@@ -1,9 +1,15 @@
-.result-content__search-input {
-  width: 70%;
-  margin: 1rem auto;
+.search-component input {
+  background-color: white;
 }
 
-.search-component select {
-  display: none;
+.result-content .search-component {
+  padding: 1.5em 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 100%;
 }
 /*# sourceMappingURL=Search.css.map */

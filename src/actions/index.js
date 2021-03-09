@@ -1,6 +1,6 @@
-export const setId = (data) => {
+export const setPhotoList = (data) => {
     return {
-        type: 'setId',
+        type: 'setPhotoList',
         payload: data
     }
 }
