@@ -11,7 +11,7 @@ export default function LandingPage() {
                     The internet's source of freely-usable images.
                     <span>Powered by creators eweryvhere.</span>
                 </p>
-                <Search inputClass={'landing-page__search-input'}/>
+                <Search/>
             </div>
         </div>
     )

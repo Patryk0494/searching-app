@@ -6,7 +6,7 @@ import './Search.css';
 import {TextField} from '@material-ui/core/';
 import {Autocomplete} from '@material-ui/lab';
 
-export default function Search({inputClass}) {
+export default function Search() {
     const [open, setOpen] = useState(false);
     const [autocompleteData, setAutocompleteData] = useState([]);
     const [autocompleteQuery, setAutocompleteQuery] = useState('');
@@ -48,7 +48,7 @@ export default function Search({inputClass}) {
             setAutocompleteData([]);
         }
     }, [open]);
-    
+
     const handleEnterPressed = (e) => {
         if (e.key === 'Enter') {
             dispatch(setQuery(e.target.value));
