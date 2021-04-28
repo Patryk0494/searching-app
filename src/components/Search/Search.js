@@ -25,7 +25,7 @@ export default function Search() {
         
         (async () => {
             if (autocompleteQuery?.length>2) {
-                const response = await fetch(`https://unsplash.com/nautocomplete/${autocompleteQuery}`)
+                const response = await fetch(`https://api.datamuse.com/sug?s=${autocompleteQuery}`)
                 const arr = await response.json();
                 const tags = arr
                 if (active) {
