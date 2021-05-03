@@ -29,7 +29,7 @@ export default function Search() {
                 const arr = await response.json();
                 const tags = arr
                 if (active) {
-                    setAutocompleteData(tags.autocomplete.map((elem) => elem.query));
+                    setAutocompleteData(tags.map((elem) => elem.word));
                 }
             } else {
                 setOpen(false);
